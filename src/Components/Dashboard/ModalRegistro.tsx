@@ -10,15 +10,16 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import axios, { Axios } from "axios";
 import { useState } from "react";
 
-interface Props {
-  openModal: any;
-  setOpenModal: any;
-}
+// interface Props {
+//   openModal: any;
+//   setOpenModal: any;
+// }
 
 export default function ModalDatos(props: any) {
-  const { openModal, setOpenModal } = props;
+  const { openModal, setOpenModal, FetchData } = props;
   const [fecha, setFecha] = useState("");
   const [cantidad, setCantidad] = useState("");
   const [descripcion, setdescripcion] = useState("");
@@ -40,14 +41,22 @@ export default function ModalDatos(props: any) {
     p: 4,
   };
 
-  const saveDatos = () => {
+  const saveDatos = async () => {
     let data = {
       fecha: fecha,
       cantidad: cantidad,
       descripcion: descripcion,
-      tipo,
+      fkTipo:1
     };
     console.log(data);
+    const response = await axios.post(
+      "https://localhost:7299/Registro",data
+    );
+    console.log(response); 
+    if(response.status == 200){
+      closeModal()
+      FetchData()
+    }
   };
 
   return (

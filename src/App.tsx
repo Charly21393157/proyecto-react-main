@@ -4,10 +4,36 @@ import Header from "./Components/Dashboard/Header";
 import SideBar from "./Components/Dashboard/SideBar";
 import Information from "./Components/Dashboard/information";
 import ModalRegistro from "./Components/Dashboard/ModalRegistro";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 
 function App() {
   const [openModal, setOpenModal] = useState(false);
+  const [rows2, setRows2] = useState([]);
+  
+    //Cuando el componente esta siendo montado
+  useEffect(() => {
+    //Funcion para obtener datos de la API
+    FetchData();
+  }, []);
+
+  const FetchData = async () => {
+    try {
+      const response = await axios.get(
+        "https://localhost:7299/Registro"
+      );
+      //const data = response.data.results;
+      //console.log(data);
+      //setRows2(data);
+      console.log(response.data.result);
+      var { data: { result } } = response;
+      setRows2(result);
+    } catch (error) {
+      console.error("Error", error);
+    }
+  };
+
+
 
   return (
     <>
@@ -28,8 +54,8 @@ function App() {
           {/* Otros componentes o contenido pueden ir aquí */}
           <Grid container item spacing={2}>
             <Grid item xs={6} md={6} lg={6}>
-              <Information /> 
-              <ModalRegistro /> 
+              <Information rows2={rows2} /> 
+               
             </Grid>
             <Grid item xs={6} md={6} lg={6}>
               <Button variant="contained" color="secondary" onClick={() => setOpenModal(true)}>
@@ -41,6 +67,7 @@ function App() {
         <ModalRegistro
           openModal={openModal}
           setOpenModal={setOpenModal}
+          FetchData={FetchData}
         ></ModalRegistro>
       </Box>
     </>

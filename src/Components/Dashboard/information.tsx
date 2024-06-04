@@ -3,55 +3,36 @@ import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import axios from "axios";
 import { useEffect, useState } from "react";
 
-export default function Tabla() {
-  const [row2, setRows2] = useState([]);
+export default function Tabla(props:any) {
+  //const [row2, setRows2] = useState([]);
   const [Show, setShow] = useState(false)
+  const {rows2} = props;
 
-  //Cuando el componente esta siendo montado
-  useEffect(() => {
-    //Funcion para obtener datos de la API
-    FetchData();
-  }, []);
 
   useEffect(() => {
-    if(Show == true)
-    alert("Update del Componente");
+    if(Show === true)
+      alert("Update del Componente");
   }, [Show])
 
   const columns: GridColDef[] = [
     //Field sirve para el nombre de la propiedad del dato a obtener
-    { field: "id", headerName: "ID", width: 90 },
+    { field: "pkRegistro", headerName: "ID", width: 90 },
     {
-      field: "name",
-      headerName: "Tipo",
+      field: "fecha",
+      headerName: "Fecha",
       width: 150,
     },
     {
-      field: "Name",
-      headerName: "Episodio",
+      field: "descripcion",
+      headerName: "Descripcion",
       width: 150,
-      editable: true,
     },
     {
-      field: "Name2",
-      headerName: "Episodio2",
+      field: "cantidad",
+      headerName: "Cantidad",
       width: 150,
-      editable: true,
     },
   ];
-
-  const FetchData = async () => {
-    try {
-      const response = await axios.get(
-        "https://rickandmortyapi.com/api/character"
-      );
-      const data = response.data.results;
-      console.log(data);
-      setRows2(data);
-    } catch (error) {
-      console.error("Error", error);
-    }
-  };
 
   return (
     <Box>
@@ -60,12 +41,13 @@ export default function Tabla() {
           <Typography>
             <strong>Movimientos</strong>
           </Typography>
-          <button onClick={() => setShow (true)}>Boton</button>
+          <button onClick={() => setShow(true)}>Boton</button>
         </Grid>
         <Grid item xs={12} md={12} lg={12}>
           <DataGrid
-            rows={row2}
+            rows={rows2}
             columns={columns}
+            getRowId={(row) => row.pkRegistro}
             initialState={{
               pagination: {
                 paginationModel: {
